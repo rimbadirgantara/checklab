@@ -1,0 +1,12 @@
+
+.table > tbody > tr > * {
+	vertical-align: middle;
+}
+
+.table > thead > tr > * {
+	vertical-align: middle;
+}
+
+.table > tfoot > tr > * {
+	vertical-align: middle;
+}
