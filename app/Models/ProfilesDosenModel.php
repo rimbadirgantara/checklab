@@ -8,7 +8,7 @@ class ProfilesDosenModel extends Model{
 
 	protected $table = 'dosen';
 	protected $useTimestamps = true;
-	protected $allowedFields = ['nama', 'username', 'email', 'nip', 'status', 'password'];
+	protected $allowedFields = ['nama', 'username', 'email', 'nip', 'status', 'password', 'foto', 'level'];
 
 	public function ambil_semua_data_dengan_username($username){
 		return $this->where(['username' => $username])->first();

@@ -5,6 +5,7 @@
 namespace App\Controllers;
 use App\Models\ProfilesKomtingModel;
 use App\Models\ProfilesLoboranModel;
+use App\Models\ProfilesDosenModel;
 
 class Esteh extends BaseController
 {
@@ -13,6 +14,7 @@ class Esteh extends BaseController
         $this->urlSegment = \Config\Services::request();
         $this->ProfilesKomtingModel = new ProfilesKomtingModel;
         $this->ProfilesLaboranModel = new ProfilesLoboranModel;
+        $this->ProfilesDosenModel = new ProfilesDosenModel;
     }
 
     public function komting($username){
@@ -27,14 +29,16 @@ class Esteh extends BaseController
         ];
         if (empty($data['data_profile'])){
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Hayo mau ngapain? Mau hek lewat sini ya ? => ' . $username);
+        } elseif (session()->get('username') !== $data['data_profile']['username']){
+            return redirect()->to("/profiles/".session()->get('username')."/komting");
         }
-        return view('profiles/profiles_komting', $data);
+        return view('profiles/profiles_komting', $data); 
         // echo '1';
     }
 
     public function edit_profile_komting($usernamee){
 
-        session()->setFlashdata('metainance', 'Update profile sedang maintenance!');
+        session()->setFlashdata('metainance', 'Sedang maintenance!');
         return redirect()->to(base_url('/profiles/' . $usernamee . '/komting'));
         // $username = htmlspecialchars($this->request->getVar('username'));
         // $email = htmlspecialchars($this->request->getVar('email'));
@@ -182,13 +186,38 @@ class Esteh extends BaseController
         ];
         if (empty($data['data_profile'])){
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Hayo mau ngapain? Mau hek lewat sini ya ? => ' . $username);
+        } elseif (session()->get('username') !== $data['data_profile']['username']){
+            return redirect()->to("/profiles/".session()->get('username')."/laboran");
         }
         return view('profiles/profiles_laboran', $data);
         // echo '1';
     }
 
     public function edit_profile_laboran($username){
-        session()->setFlashdata('metainance', 'Update profile sedang maintenance!');
+        session()->setFlashdata('metainance', 'Sedang maintenance!');
         return redirect()->to(base_url('/profiles/' . $username . '/laboran'));
+    }
+
+    public function dosen($username){
+        $data = [
+            'baner' => 'PolbengCheckLab',
+            'title' => 'Dosen Profile',
+            'name_page' => 'Dosen Page',
+            'sub_name' => 'Profile', 
+            'menuSegment' => $this->urlSegment->uri->getSegment(1),
+            'data_profile' => $this->ProfilesDosenModel->ambil_semua_data_dengan_username($username),
+            'valid' => \Config\Services::validation()
+        ];
+        if (empty($data['data_profile'])){
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Hayo mau ngapain? Mau hek lewat sini ya ? => ' . $username);
+        } elseif (session()->get('username') !== $data['data_profile']['username']){
+            return redirect()->to("/profiles/".session()->get('username')."/laboran");
+        }
+        return view('profiles/profiles_dosen', $data);
+    }
+
+    public function edit_profile_dosen($username){
+        session()->setFlashdata('metainance', 'Sedang maintenance!');
+        return redirect()->to(base_url('/profiles/' . $username . '/dosen'));
     }
 }

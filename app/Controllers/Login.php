@@ -73,7 +73,7 @@ class Login extends BaseController
                                 'nama' => $cek_user_['nama'],
                                 'username' => $cek_user_['username'],
                                 'level' => $cek_user_['level'],
-                                'no_dosen' => $cek_user_['no_dosen']
+                                'nip' => $cek_user_['nip']
                             ];
                             session()->set($data_ses);
                             return redirect()->to(base_url('/profiles/'.$data_ses['username'].'/dosen'));

@@ -24,7 +24,7 @@ class Komting extends BaseController{
 			session()->setFlashdata('login_dulu', 'Silahkan Login Terlebih Dahulu');
 			return redirect()->to(base_url('/login'));
 		} elseif (session()->get('level') === 'dosen'){
-			echo 'dosen di larang masuk'; die;
+			echo 'dosen di larang masuk'; die; 
 		} elseif (session()->get('level') === 'laboran'){ 
 			return redirect()->to(base_url('/lab'));
 		}

@@ -955,8 +955,141 @@ class Laboran extends BaseController
     }
 
     public function hapus_dsn($id){
+        if(! session()->get('username') AND ! session()->get('level') AND ! session()->get('no_laboran') ){
+            session()->setFlashdata('login_dulu', 'Silahkan Login Terlebih Dahulu');
+            return redirect()->to(base_url('/login'));
+        } elseif (session()->get('level') === 'komting'){
+            echo 'komting di larang masuk'; die;
+        } elseif (session()->get('level') === 'dosen'){
+            echo 'dosen di larang masuk'; die;
+        }
+
         $this->ProfilesDosenModel->delete($id);
         session()->setFlashdata('hapusdosen', 'Data berhasil di hapus!');
         return redirect()->to(base_url('/komd/'));
+    }
+
+    public function tambah_dosen(){
+      $data = [
+            'baner' => 'CheckLab',
+            'title' => 'Laboran Dashboard',
+            'name_page' => 'Laboran Page',
+            'sub_name' => 'Rumah',
+            'menuSegment' => $this->urlSegment->uri->getSegment(1),
+            'data_gedung' => $this->GedungModel->data_gedung(),
+            'data_profile' => $this->ProfilesLaboranModel->ambil_semua_data_dengan_username(session()->get('username')),
+            'valid' => \Config\Services::validation()
+        ];  
+
+        return view('laboran/dosen_control/form_tambah_dosen', $data);
+    }
+
+    public function send_data_dosen(){
+        if(! session()->get('username') AND ! session()->get('level') AND ! session()->get('no_laboran') ){
+            session()->setFlashdata('login_dulu', 'Silahkan Login Terlebih Dahulu');
+            return redirect()->to(base_url('/login'));
+        } elseif (session()->get('level') === 'komting'){
+            echo 'komting di larang masuk'; die;
+        } elseif (session()->get('level') === 'dosen'){
+            echo 'dosen di larang masuk'; die;
+        }
+
+        $data = [
+            'baner' => 'CheckLab',
+            'title' => 'Laboran Dashboard',
+            'name_page' => 'Laboran Page',
+            'sub_name' => 'Rumah',
+            'menuSegment' => $this->urlSegment->uri->getSegment(1),
+            'data_gedung' => $this->GedungModel->data_gedung(),
+            'data_profile' => $this->ProfilesLaboranModel->ambil_semua_data_dengan_username(session()->get('username')),
+            'valid' => \Config\Services::validation()
+        ];
+
+        $rules = [
+            'nama' => [
+                'rules' => 'required|min_length[5]',
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'min_length' => 'minimal 5 karakter untuk {field}'
+                ]
+            ],
+
+            'username' => [
+                'rules' => 'required|is_unique[dosen.username]|min_length[5]',
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'is_unique' => '{field} sudah di gunakan',
+                    'min_length' => 'minimal 5 karakter untuk {field}'
+                ]
+            ],
+
+            'email' => [
+                'rules' => 'required|is_unique[dosen.email]|valid_email',
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'is_unique' => '{field} sudah di gunakan',
+                    'valid_email' => 'format {field} tidak valid'
+                ]
+            ],
+
+            'nip' => [
+                'rules' => 'required|is_unique[dosen.nip]|min_length[10]|numeric',
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'is_unique' => '{field} sudah di gunakan',
+                    'min_length' => 'minimal 10 karakter untuk {field}',
+                    'numeric' => '{field} harus angka!'
+                ]
+            ],
+
+            'password' => [
+                'rules' => 'required|min_length[3]',
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'min_length' => 'minimal 3 karakter untuk {field}'
+                ]
+            ],
+
+            'realpassword' => [
+                'rules' => 'required|matches[password]',
+                'errors' => [
+                    'required' => 'password harus di isi!',
+                    'matches' => 'password tidak sama'
+                ]
+            ],
+
+            'status' => [
+                'rules' => 'required|min_length[4]',
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'min_length' => 'minimal 4 karakter untuk {field}'
+                ]
+            ]
+        ];
+
+        if (! $this->validate($rules)){
+            $validation = \Config\Services::validation();
+            return redirect()->to(base_url('/komd/tmbhdos'))->withInput()->with('validation', $validation);
+        }
+
+        if (htmlspecialchars($this->request->getVar('status')) === 'Aktif'){
+            $status = 'aktif';
+        } elseif (htmlspecialchars($this->request->getVar('status')) === 'Non Aktif'){
+            $status = 'nonaktif';
+        }
+
+        $data_dosen = [
+            'nama' => htmlspecialchars($this->request->getVar('nama')),
+            'username' => htmlspecialchars($this->request->getVar('username')),
+            'email' => htmlspecialchars($this->request->getVar('email')),
+            'nip' => htmlspecialchars($this->request->getVar('nip')),
+            'password' => password_hash($this->request->getVar('realpassword'), PASSWORD_DEFAULT),
+            'status' => $status,
+            'foto' => 'default.png',
+            'level' => 'dosen'
+        ];
+
+        $this->ProfilesDosenModel->save($data_dosen);
+        return redirect()->to(base_url('/komd'));
     }
 }

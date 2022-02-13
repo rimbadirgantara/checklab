@@ -19,7 +19,7 @@
       </div>
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Daftar Gedung</h3>
+          <h3 class="card-title">Lab</h3>
 
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -35,22 +35,22 @@
             <thead>
               <tr>
                 <th class="text-center" width="50">No</th>
-                <th class="text-center">Gedung</th>
-                <th class="text-center">Total Ruangan</th>
+                <th class="text-center">Lab</th>
+                <th class="text-center">Total Booking</th>
                 <th class="text-center" width="60">Aksi</th>
               </tr>
             </thead>
             <tbody>
               <?php $i = 1;
-              foreach ($data_gedung as $dg): ?>
+              foreach ($data_lab as $dg): ?>
                 <tr>
                   <td>
                     <center><?= $i++; ?></center>
                   </td>
-                  <td><?= $dg['nama_gedung']; ?></td>
-                  <td><?= $dg['total_ruangan']; ?> Ruangan</td>
+                  <td><?= $dg['nama_lab']; ?></td>
+                  <td><?= $dg['total_booking']; ?> Booking</td>
                   <td>
-                    <a href="/do/lab/<?= $dg['slug']; ?>" class="btn btn-info btn-sm"><i class="fas fa-info-circle"></i></a>
+                    <a href="/do/lab/<?= $dg['slug']; ?>/detail" class="btn btn-info btn-sm"><i class="fas fa-info-circle"></i></a>
                   </td>
                 </tr>
               <?php endforeach; ?>

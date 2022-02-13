@@ -44,6 +44,8 @@ $routes->get('/profiles/(:segment)/komting', 'Esteh::komting/$1');
 $routes->add('/profiles_edit/(:segment)', 'Esteh::edit_profile_komting/$1');
 $routes->get('/profiles/(:segment)/laboran', 'Esteh::laboran/$1');
 $routes->add('/profiles_edit_laboran/(:segment)', 'Esteh::edit_profile_laboran/$1');
+$routes->get('/profiles/(:segment)/dosen', 'Esteh::dosen/$1');
+$routes->match(['get', 'post'], '/edit_profile_dosen/(:segment)', 'Esteh::edit_profile_dosen/$1');
 
 // komting
 $routes->get('/ko', 'Komting::index');
@@ -55,6 +57,18 @@ $routes->add('/abcd/(:segment)/efgh', 'Komting::send_form/$1');
 $routes->delete('/re/(:num)', 'Komting::reservasi_del/$1');
 $routes->get('/re', 'Komting::reservasi');
 $routes->get('/re/(:num)/detail/reservasi', 'Komting::info_reservasi/$1');
+
+// dosen
+$routes->get('/do', 'Dosen::index'); 
+$routes->get('/do/lab/(:segment)', 'Dosen::lab/$1');
+$routes->get('/do/lab/(:segment)/detail/', 'Dosen::detail_lab/$1');
+$routes->get('/do/lab/(:segment)/form', 'Dosen::form_reservasi_lab/$1');
+$routes->add('/abcd/(:segment)/efgh/dsn', 'Dosen::send_form/$1');
+
+$routes->delete('/re/do/(:num)', 'Dosen::reservasi_del/$1');
+$routes->get('/re/do', 'Dosen::reservasi');
+$routes->get('/re/do/(:num)/detail/reservasi', 'Dosen::info_reservasi/$1');
+
 
 
 // laboran
@@ -79,12 +93,12 @@ $routes->get('/kom/(:segment)/info_komting', 'Laboran::info_komting/$1');
 $routes->match(['get', 'post'], '/kom/(:segment)/update_komting/(:num)', 'Laboran::update_komting/$1/$2');
 $routes->delete('/kom/(:segment)/hapus_komting', 'Laboran::hapus_komting/$1');
 $routes->get('/komd', 'Laboran::dosen');
+$routes->get('/komd/tmbhdos', 'Laboran::tambah_dosen');
+$routes->add('/komd/senddatadosen', 'Laboran::send_data_dosen');
 $routes->get('/komd/(:segment)/info_dosen', 'Laboran::info_dsn/$1');
 $routes->match(['get', 'post'], '/komd/(:segment)/update_dosen/(:num)', 'Laboran::update_dosen/$1/$2');
 $routes->delete('/komd/(:num)/hapus_dosen', 'Laboran::hapus_dsn/$1');
 
-// dosen
-$routes->get('/do', 'Dosen::index');
 
 $routes->get('/lgt', 'Login::lgt');
 

@@ -56,6 +56,8 @@
             <a href="<?= base_url('/profiles/') . '/' . session()->get('username') . '/komting'; ?>" class="d-block"><?= session()->get('username'); ?></a>
           <?php elseif (session()->get('level') === 'laboran'): ?>
             <a href="<?= base_url('/profiles/') . '/' . session()->get('username') . '/laboran'; ?>" class="d-block"><?= session()->get('username'); ?></a> 
+          <?php elseif (session()->get('level') === 'dosen'): ?>
+            <a href="<?= base_url('/profiles/') . '/' . session()->get('username') . '/dosen'; ?>" class="d-block"><?= session()->get('username'); ?></a> 
           <?php endif; ?>
         </div>
       </div>
@@ -118,9 +120,9 @@
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <?php if ($menuSegment === 're'): ?>
-                  <a href="<?= base_url('/re') ?>" class="nav-link active">
+                  <a href="<?= base_url('/re/do') ?>" class="nav-link active">
                 <?php else: ?>
-                  <a href="<?= base_url('/re') ?>" class="nav-link">
+                  <a href="<?= base_url('/re/do') ?>" class="nav-link">
                 <?php endif; ?>
                   <i class="fas fa-laptop-code"></i>
                   <p>Reservasi</p>
