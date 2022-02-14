@@ -74,7 +74,7 @@
               </p>
             </a>
 
-
+            <!-- komting -->
             <?php if (session()->get('level') === 'komting'): ?>
             <ul class="nav nav-treeview">
               <li class="nav-item">
@@ -102,8 +102,9 @@
                 </a>
               </li>
             </ul>
+            <!-- END komting -->
 
-
+            <!-- DOSEN -->
             <?php elseif (session()->get('level') === 'dosen'): ?>
             <ul class="nav nav-treeview">
               <li class="nav-item">
@@ -130,7 +131,21 @@
               </li>
             </ul>
 
-            
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <?php if ($menuSegment === 'komt'): ?>
+                  <a href="<?= base_url('/komt') ?>" class="nav-link active">
+                <?php else: ?>
+                  <a href="<?= base_url('/komt') ?>" class="nav-link">
+                <?php endif; ?>
+                  <i class="fas fa-user-graduate"></i>
+                  <p>Komting</p>
+                </a>
+              </li>
+            </ul>
+            <!-- END DOSEN -->
+
+            <!-- Laboran -->
             <?php elseif (session()->get('level') === 'laboran'): ?>
             <ul class="nav nav-treeview">
               <li class="nav-item">
@@ -182,6 +197,7 @@
                 </a>
               </li>
             </ul>
+            <!-- END Laboran -->
 
             <li></li>
             </ul>

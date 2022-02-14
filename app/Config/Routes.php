@@ -69,6 +69,12 @@ $routes->delete('/re/do/(:num)', 'Dosen::reservasi_del/$1');
 $routes->get('/re/do', 'Dosen::reservasi');
 $routes->get('/re/do/(:num)/detail/reservasi', 'Dosen::info_reservasi/$1');
 
+$routes->get('/komt', 'Dosen::komting');
+$routes->delete('/komt/(:segment)/hapus_komting', 'Dosen::hapus_komting/$1');
+$routes->get('/komt/(:segment)/info_komting', 'Dosen::info_komting/$1');
+$routes->match(['get', 'post'], '/komt/(:segment)/update_komting/(:num)', 'Dosen::update_komting/$1/$2');
+$routes->get('/komt/tmbhkomting', 'Dosen::tmbh_kmtng');
+$routes->add('/komt/tmbhkomtingsend', 'Dosen::send_data_kmtng');
 
 
 // laboran

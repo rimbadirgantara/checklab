@@ -18,6 +18,17 @@ if (BerhasilSimpanDataReservasi) {
 	});
 }
 
+const Berhasiltambahkomting = $('.berhasiltambahkomting').data('flashdata');
+if (Berhasiltambahkomting) {
+	Swal.fire({
+		position: 'top-end',
+  		icon: 'success',
+  		title: Berhasiltambahkomting,
+  		showConfirmButton: false,
+  		timer: 2500
+	});
+}
+
 const Formatwaktutidakvalid = $('.format-waktu').data('flashdata');
 if (Formatwaktutidakvalid){
 	Swal.fire({

@@ -502,8 +502,6 @@ class Laboran extends BaseController
             'data_komting' => $this->ProfilesKomtingModel->findAll()
         ];
 
-        // dd($data['data_komting']);
-
         return view('laboran/komting_control/index', $data);
     }
 
@@ -798,6 +796,7 @@ class Laboran extends BaseController
         }
 
         $this->ProfilesKomtingModel->save($data_komting);
+        session()->setFlashdata('berhasiltambahkomting', 'Berhasil Menambahkan Komting!');
         return redirect()->to(base_url('/kom'));
     }
 

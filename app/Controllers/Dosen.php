@@ -5,6 +5,7 @@ use App\Models\ProfilesDosenModel;
 use App\Models\GedungModel;
 use App\Models\LabModel;
 use App\Models\ReservasiModel;
+use App\Models\ProfilesKomtingModel;
 
 class Dosen extends BaseController
 {
@@ -14,6 +15,7 @@ class Dosen extends BaseController
         $this->GedungModel = new GedungModel;
         $this->LabModel = new LabModel;
         $this->ReservasiModel = new ReservasiModel;
+        $this->ProfilesKomtingModel = new ProfilesKomtingModel;
     }
     public function index()
     {
@@ -23,7 +25,7 @@ class Dosen extends BaseController
         } elseif (session()->get('level') === 'komting'){
             echo 'dosen di larang masuk'; die;
         } elseif (session()->get('level') === 'laboran'){
-            echo 'laboran di larang masuk'; die;
+            echo 'laboran di larang masuk'; die; 
         }
 
 
@@ -276,5 +278,326 @@ class Dosen extends BaseController
             'data_reservasi' => $this->ReservasiModel->ambil_data_detail_lab_id($id)
         ];
         return view('dosen/form_edit_reservasi', $data);
+    }
+
+    public function komting(){
+        if(! session()->get('username') AND ! session()->get('level') AND ! session()->get('no_dosen') ){
+            session()->setFlashdata('login_dulu', 'Silahkan Login Terlebih Dahulu');
+            return redirect()->to(base_url('/login'));
+        } elseif (session()->get('level') === 'komting'){
+            echo 'dosen di larang masuk'; die;
+        } elseif (session()->get('level') === 'laboran'){
+            echo 'laboran di larang masuk'; die;
+        }
+
+
+        $data = [
+            'baner' => 'CheckLab',
+            'title' => 'Laboran Dashboard',
+            'name_page' => 'Laboran Page',
+            'sub_name' => 'Rumah',
+            'menuSegment' => $this->urlSegment->uri->getSegment(1),
+            'data_gedung' => $this->GedungModel->data_gedung(),
+            'data_profile' => $this->ProfilesDosenModel->ambil_semua_data_dengan_username(session()->get('username')),
+            'data_komting' => $this->ProfilesKomtingModel->findAll()
+        ];
+
+        return view('dosen/komting_control/index', $data); 
+    }
+
+    public function hapus_komting($id){
+        $this->ProfilesKomtingModel->hapus_komting_dengan_id($id);
+        session()->setFlashdata('hapuskomting', 'Data berhasil di hapus!');
+        return redirect()->to(base_url('/komt'));
+    }
+
+    public function info_komting($username){
+        if(! session()->get('username') AND ! session()->get('level') AND ! session()->get('no_dosen') ){
+            session()->setFlashdata('login_dulu', 'Silahkan Login Terlebih Dahulu');
+            return redirect()->to(base_url('/login'));
+        } elseif (session()->get('level') === 'komting'){
+            echo 'dosen di larang masuk'; die;
+        } elseif (session()->get('level') === 'laboran'){
+            echo 'laboran di larang masuk'; die;
+        }
+
+        $data = [
+            'baner' => 'CheckLab',
+            'title' => 'Laboran Dashboard',
+            'name_page' => 'Laboran Page',
+            'sub_name' => 'Rumah',
+            'menuSegment' => $this->urlSegment->uri->getSegment(1),
+            'data_gedung' => $this->GedungModel->data_gedung(),
+            'data_profile' => $this->ProfilesDosenModel->ambil_semua_data_dengan_username(session()->get('username')),
+            'data_komting' => $this->ProfilesKomtingModel->ambil_semua_data_dengan_username($username),
+            'valid' => \Config\Services::validation()
+        ];
+
+        if (empty($data['data_komting'])){
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Maaf, mohon kembali');
+        }
+
+        return view('dosen/komting_control/info_komting', $data);
+    }
+
+    public function update_komting($username, $id){
+        if(! session()->get('username') AND ! session()->get('level') AND ! session()->get('no_dosen') ){
+            session()->setFlashdata('login_dulu', 'Silahkan Login Terlebih Dahulu');
+            return redirect()->to(base_url('/login'));
+        } elseif (session()->get('level') === 'komting'){
+            echo 'dosen di larang masuk'; die;
+        } elseif (session()->get('level') === 'laboran'){
+            echo 'laboran di larang masuk'; die;
+        }
+
+        if (htmlspecialchars($this->request->getVar('status')) === 'Aktif'){
+            $status = 'aktif';
+        } elseif (htmlspecialchars($this->request->getVar('status')) === 'Non Aktif'){
+            $status = 'nonaktif';
+        }
+        $data_update = [
+            'nama' => htmlspecialchars($this->request->getVar('nama')),
+            'username' => htmlspecialchars($this->request->getVar('username')),
+            'email' => htmlspecialchars($this->request->getVar('email')),
+            'nim' => htmlspecialchars($this->request->getVar('nim')),
+            'jurusan' => htmlspecialchars($this->request->getVar('jurusan')),
+            'prodi' => htmlspecialchars($this->request->getVar('prodi')),
+            'status' => $status
+        ];
+
+        $data_lama = $this->ProfilesKomtingModel->ambil_semua_data_dengan_username($username);
+
+        if ($data_lama['username'] === $data_update['username']){
+            $rules_username = 'required|min_length[5]';
+        } else {
+            $rules_username = 'required|is_unique[komting.username]|min_length[5]';
+        }
+
+        if ($data_lama['email'] === $data_update['email']){
+            $rules_email = 'required|valid_email';
+        } else {
+            $rules_email = 'required|is_unique[komting.email]|valid_email';
+        }
+
+        if ($data_lama['nim'] === $data_update['nim']){
+            $rules_nim = 'required|min_length[10]|numeric';
+        } else {
+            $rules_nim = 'required|is_unique[komting.nim]|min_length[10]|numeric';
+        }
+
+
+        $rules = [
+            'nama' => [
+                'rules' => 'required|min_length[5]',
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'min_length' => 'minimal 5 karakter untuk {field}'
+                ]
+            ],
+
+            'username' => [
+                'rules' => $rules_username,
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'is_unique' => '{field} sudah di gunakan',
+                    'min_length' => 'minimal 5 karakter untuk {field}'
+                ]
+            ],
+
+            'email' => [
+                'rules' => $rules_email,
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'is_unique' => '{field} sudah di gunakan',
+                    'valid_email' => 'format {field} tidak valid'
+                ]
+            ],
+
+            'nim' => [
+                'rules' => $rules_nim,
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'is_unique' => '{field} sudah di gunakan',
+                    'min_length' => 'minimal 5 karakter untuk {field}',
+                    'numeric' => '{field} harus angka!'
+                ]
+            ],
+
+            'jurusan' => [
+                'rules' => 'required|min_length[6]',
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'min_length' => 'minimal 6 karakter untuk {field}'
+                ]
+            ],
+
+            'prodi' => [
+                'rules' => 'required|min_length[6]',
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'min_length' => 'minimal 6 karakter untuk {field}'
+                ]
+            ],
+
+            'status' => [
+                'rules' => 'required|min_length[4]',
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'min_length' => 'minimal 4 karakter untuk {field}'
+                ]
+            ]
+        ];
+
+        if (! $this->validate($rules)){
+            $validation = \Config\Services::validation();
+            return redirect()->to(base_url('/komt/' . $username . '/info_komting'))->withInput()->with('validation', $validation);
+        }
+
+        $this->ProfilesKomtingModel->update_profiles($id, $data_update);
+        session()->setFlashdata('berhasileditprofile', 'Berhasil update data!');
+        return redirect()->to(base_url('/komt/' . $data_update['username'] . '/info_komting'));
+    }
+
+    public function tmbh_kmtng(){
+        if(! session()->get('username') AND ! session()->get('level') AND ! session()->get('no_dosen') ){
+            session()->setFlashdata('login_dulu', 'Silahkan Login Terlebih Dahulu');
+            return redirect()->to(base_url('/login'));
+        } elseif (session()->get('level') === 'komting'){
+            echo 'dosen di larang masuk'; die;
+        } elseif (session()->get('level') === 'laboran'){
+            echo 'laboran di larang masuk'; die;
+        }
+
+        $data = [
+            'baner' => 'CheckLab',
+            'title' => 'Laboran Dashboard',
+            'name_page' => 'Laboran Page',
+            'sub_name' => 'Rumah',
+            'menuSegment' => $this->urlSegment->uri->getSegment(1),
+            'data_gedung' => $this->GedungModel->data_gedung(),
+            'data_profile' => $this->ProfilesDosenModel->ambil_semua_data_dengan_username(session()->get('username')),
+            'valid' => \Config\Services::validation()
+        ];
+
+        return view('dosen/komting_control/form_tambah_komting', $data);
+    }
+
+    public function send_data_kmtng(){
+        if(! session()->get('username') AND ! session()->get('level') AND ! session()->get('no_dosen') ){
+            session()->setFlashdata('login_dulu', 'Silahkan Login Terlebih Dahulu');
+            return redirect()->to(base_url('/login'));
+        } elseif (session()->get('level') === 'komting'){
+            echo 'dosen di larang masuk'; die;
+        } elseif (session()->get('level') === 'laboran'){
+            echo 'laboran di larang masuk'; die;
+        }
+
+        if (htmlspecialchars($this->request->getVar('status')) === 'Aktif'){
+            $status = 'aktif';
+        } elseif (htmlspecialchars($this->request->getVar('status')) === 'Non Aktif'){
+            $status = 'nonaktif';
+        }
+
+        $data_komting = [
+            'nama' => htmlspecialchars($this->request->getVar('nama')),
+            'username' => htmlspecialchars($this->request->getVar('username')),
+            'email' => htmlspecialchars($this->request->getVar('email')),
+            'nim' => htmlspecialchars($this->request->getVar('nim')),
+            'jurusan' => htmlspecialchars($this->request->getVar('jurusan')),
+            'prodi' => htmlspecialchars($this->request->getVar('prodi')),
+            'status' => $status,
+            'password' => password_hash($this->request->getVar('realpassword'), PASSWORD_DEFAULT),
+            'foto' => 'default.png',
+            'level' => 'komting'
+        ];
+
+
+        $rules = [
+            'nama' => [
+                'rules' => 'required|min_length[5]',
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'min_length' => 'minimal 5 karakter untuk {field}'
+                ]
+            ],
+
+            'username' => [
+                'rules' => 'required|is_unique[komting.username]|min_length[5]',
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'is_unique' => '{field} sudah di gunakan',
+                    'min_length' => 'minimal 5 karakter untuk {field}'
+                ]
+            ],
+
+            'email' => [
+                'rules' => 'required|is_unique[komting.email]|valid_email',
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'is_unique' => '{field} sudah di gunakan',
+                    'valid_email' => 'format {field} tidak valid'
+                ]
+            ],
+
+            'nim' => [
+                'rules' => 'required|is_unique[komting.nim]|min_length[10]|numeric',
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'is_unique' => '{field} sudah di gunakan',
+                    'min_length' => 'minimal 10 karakter untuk {field}',
+                    'numeric' => '{field} harus angka!'
+                ]
+            ],
+
+            'jurusan' => [
+                'rules' => 'required|min_length[6]',
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'min_length' => 'minimal 6 karakter untuk {field}'
+                ]
+            ],
+
+            'prodi' => [
+                'rules' => 'required|min_length[6]',
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'min_length' => 'minimal 6 karakter untuk {field}'
+                ]
+            ],
+
+            'status' => [
+                'rules' => 'required|min_length[4]',
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'min_length' => 'minimal 4 karakter untuk {field}'
+                ]
+            ],
+
+            'password' => [
+                'rules' => 'required|min_length[3]',
+                'errors' => [
+                    'required' => '{field} harus di isi!',
+                    'min_length' => 'minimal 3 karakter untuk {field}'
+                ]
+            ],
+            'realpassword' => [
+                'rules' => 'required|matches[password]',
+                'errors' => [
+                    'required' => 'password harus di isi!',
+                    'matches' => 'password tidak sama'
+                ]
+            ]
+
+        ];
+
+        switch ($this->validate($rules)){
+            case false:
+                $validation = \Config\Services::validation();
+                return redirect()->to(base_url('/komt/tmbhkomting'))->withInput()->with('validation', $validation);
+        }
+
+        $this->ProfilesKomtingModel->save($data_komting);
+        session()->setFlashdata('berhasiltambahkomting', 'Berhasil Menambahkan Komting!');
+        return redirect()->to(base_url('/komt'));
     }
 }
