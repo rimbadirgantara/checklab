@@ -46,7 +46,7 @@ $routes->get('/profiles/(:segment)/laboran', 'Esteh::laboran/$1');
 $routes->add('/profiles_edit_laboran/(:segment)', 'Esteh::edit_profile_laboran/$1');
 $routes->get('/profiles/(:segment)/dosen', 'Esteh::dosen/$1');
 $routes->match(['get', 'post'], '/edit_profile_dosen/(:segment)', 'Esteh::edit_profile_dosen/$1');
-
+ 
 // komting
 $routes->get('/ko', 'Komting::index');
 $routes->get('/ko/lab/(:segment)', 'Komting::lab/$1'); 
@@ -92,7 +92,7 @@ $routes->delete('/labre/(:num)', 'Laboran::reservasi_del_labre/$1');
 $routes->get('/labre/(:num)/detail/reservasi', 'Laboran::info_reservasi_labre/$1');
 $routes->add('/labre/(:segment)/(:num)/edit_reservasi/', 'Laboran::edit_reservasi_labre/$1/$2');
 
-$routes->get('/kom/', 'Laboran::komting');
+$routes->get('/kom/', 'Laboran::komting'); 
 $routes->get('/kom/tmbhkomting', 'Laboran::tmbh_kmtng');
 $routes->add('/kom/tmbhkomtingsend', 'Laboran::send_data_kmtng');
 $routes->get('/kom/(:segment)/info_komting', 'Laboran::info_komting/$1');

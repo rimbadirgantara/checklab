@@ -31,8 +31,8 @@ class Dosen extends BaseController
 
         $data = [
             'baner' => 'CheckLab',
-            'title' => 'Komting Dashboard',
-            'name_page' => 'Komting Page',
+            'title' => 'Dosen Dashboard',
+            'name_page' => 'Dosen Page',
             'sub_name' => 'Rumah',
             'menuSegment' => $this->urlSegment->uri->getSegment(1),
             'data_profile' => $this->ProfilesDosenModel->ambil_semua_data_dengan_username(session()->get('username')),
@@ -60,8 +60,8 @@ class Dosen extends BaseController
 
         $data = [
             'baner' => 'PolbengCheckLab',
-            'title' => 'Komting Dashboard',
-            'name_page' => 'Komting Page',
+            'title' => 'Dosen Dashboard',
+            'name_page' => 'Dosen Page',
             'sub_name' => 'List Lab',
             'menuSegment' => $this->urlSegment->uri->getSegment(1),
             'data_lab' => $this->LabModel->ambil_data_lab($slug_gedung),
@@ -88,8 +88,8 @@ class Dosen extends BaseController
 
         $data = [
             'baner' => 'PolbengCheckLab',
-            'title' => 'Komting Dashboard',
-            'name_page' => 'Komting Page',
+            'title' => 'Dosen Dashboard',
+            'name_page' => 'Dosen Page',
             'sub_name' => 'Detail Lab',
             'menuSegment' => $this->urlSegment->uri->getSegment(1),
             'data_lab' => $this->LabModel->ambil_data_detail_lab($slug_lab),
@@ -118,9 +118,9 @@ class Dosen extends BaseController
 
         $data = [
             'baner' => 'PolbengCheckLab',
-            'title' => 'Komting Dashboard',
-            'name_page' => 'Komting Page',
-            'sub_name' => 'Detail Lab',
+            'title' => 'Dosen Dashboard',
+            'name_page' => 'Dosen Page',
+            'sub_name' => 'Form Reservasi',
             'menuSegment' => $this->urlSegment->uri->getSegment(1),
             'data_lab' => $this->LabModel->ambil_data_detail_lab($slug_lab),
             'valid' => \Config\Services::validation(),
@@ -218,8 +218,8 @@ class Dosen extends BaseController
 
         $data = [
             'baner' => 'PolbengCheckLab',
-            'title' => 'Komting Dashboard', 
-            'name_page' => 'Komting Page',
+            'title' => 'Dosen Dashboard',
+            'name_page' => 'Dosen Page',
             'sub_name' => 'Reservasi Lst',
             'menuSegment' => $this->urlSegment->uri->getSegment(1),
             'data_reservasi' => $this->ReservasiModel->ambil_data_reservasi_dengan_username(session()->get('username')),
@@ -269,8 +269,8 @@ class Dosen extends BaseController
         
         $data = [
             'baner' => 'PolbengCheckLab',
-            'title' => 'Komting Dashboard',
-            'name_page' => 'Komting Page',
+            'title' => 'Dosen Dashboard',
+            'name_page' => 'Dosen Page',
             'sub_name' => 'Reservasi Info',
             'menuSegment' => $this->urlSegment->uri->getSegment(1),
             'data_reservasi' => $this->ReservasiModel->ambil_data_reservasi_dengan_username(session()->get('username')),
@@ -293,9 +293,9 @@ class Dosen extends BaseController
 
         $data = [
             'baner' => 'CheckLab',
-            'title' => 'Laboran Dashboard',
-            'name_page' => 'Laboran Page',
-            'sub_name' => 'Rumah',
+            'title' => 'Dosen Dashboard',
+            'name_page' => 'Dosen Page',
+            'sub_name' => 'Komting Lst',
             'menuSegment' => $this->urlSegment->uri->getSegment(1),
             'data_gedung' => $this->GedungModel->data_gedung(),
             'data_profile' => $this->ProfilesDosenModel->ambil_semua_data_dengan_username(session()->get('username')),
@@ -323,9 +323,9 @@ class Dosen extends BaseController
 
         $data = [
             'baner' => 'CheckLab',
-            'title' => 'Laboran Dashboard',
-            'name_page' => 'Laboran Page',
-            'sub_name' => 'Rumah',
+            'title' => 'Dosen Dashboard',
+            'name_page' => 'Dosen Page',
+            'sub_name' => 'Komting Info',
             'menuSegment' => $this->urlSegment->uri->getSegment(1),
             'data_gedung' => $this->GedungModel->data_gedung(),
             'data_profile' => $this->ProfilesDosenModel->ambil_semua_data_dengan_username(session()->get('username')),
@@ -470,9 +470,9 @@ class Dosen extends BaseController
 
         $data = [
             'baner' => 'CheckLab',
-            'title' => 'Laboran Dashboard',
-            'name_page' => 'Laboran Page',
-            'sub_name' => 'Rumah',
+            'title' => 'Dosen Dashboard',
+            'name_page' => 'Dosen Page',
+            'sub_name' => 'Form Tambah Komting',
             'menuSegment' => $this->urlSegment->uri->getSegment(1),
             'data_gedung' => $this->GedungModel->data_gedung(),
             'data_profile' => $this->ProfilesDosenModel->ambil_semua_data_dengan_username(session()->get('username')),
